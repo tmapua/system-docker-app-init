@@ -4,6 +4,8 @@ import re
 import subprocess
 import threading
 from pyowm_app import weatherapp
+import websockets
+import asyncio
 
 
 
@@ -20,17 +22,27 @@ def dump_print(filename):
             # pprint(ip_addresses)
 
 def weather():
+    producer_loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(producer_loop)
+    start_server = websockets.serve(echo, "172.17.0.2", 8080)    
+    producer_loop.run_until_complete(start_server)
+    producer_loop.run_forever()
+
+async def echo(websocket, path):
+    # async for message in websocket:
+    #     #action here
+    #     await websocket.send(message)
+    #     print(message)
     while True:
-        message = input("query: ")
-        with open("weather.txt", "w") as file:
-            file.write(weatherapp(message))
-        # print(weatherapp(message))
+        message = await websocket.recv()
+        await websocket.send(weatherapp(message))
 
 
 filename = 'lol.pcap'
 
 if os.path.exists(filename):
     os.remove(filename)
+
 
 client = threading.Thread(target=tcp_dump, args=(filename,))
 cpu_monitor = threading.Thread(target=dump_print, args=(filename,))#, daemon=True)
