@@ -1,9 +1,10 @@
 FROM ubuntu
-RUN apt-get update && apt-get install -y tcpdump && apt-get install -y python3 && apt-get install -y net-tools
+RUN apt-get update && apt-get install -y tcpdump tcptrace && apt-get install -y python3 && apt-get install -y net-tools && apt-get install -y python3-pip && pip3 install pyowm requests websockets asyncio
 
 WORKDIR /app
 
 EXPOSE 8080
 
 ADD trace_script.py /app/
+ADD pyowm_app.py /app/
 CMD ["python3", "trace_script.py"]
