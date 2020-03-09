@@ -18,7 +18,10 @@ def dump_print(filename):
         if os.path.exists(filename):
             line = subprocess.check_output(['tcptrace', '-b', '-n', filename]).decode('utf-8')
             # import pdb; pdb.set_trace()
-            ip_addresses = set(x for x in re.findall('\s\d+\.\d+\.\d+\.\d+', line))
+            ip_addresses = {x for x in re.findall('\s\d+\.\d+\.\d+\.\d+', line)}
+            with open('/app/ip_addresses.txt', 'w') as ip:
+                for x in ip_addresses:
+                    ip.write('{}\n'.format(x))
             # pprint(ip_addresses)
 
 def weather():
@@ -38,7 +41,7 @@ async def echo(websocket, path):
         await websocket.send(weatherapp(message))
 
 
-filename = 'lol.pcap'
+filename = 'tracefile.pcap'
 
 if os.path.exists(filename):
     os.remove(filename)
