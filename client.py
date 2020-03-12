@@ -2,7 +2,7 @@
 import asyncio
 import subprocess
 import threading
-import sockets
+import socket
 from time import sleep
 import websockets
 
