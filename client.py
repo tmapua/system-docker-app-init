@@ -23,7 +23,9 @@ async def get_weather():
                     async for query in websocket:
                         await websocket.send(query)
                         message = await websocket.recv()
+                        print(message)
                         flag = 1
+                        print("flag: {}".format(flag))
                 else:
                     condition.wait()
                 condition.release()
@@ -39,6 +41,7 @@ async def weatherapp(websocket, path):
     while(True):
         try:
             if flag == 1:
+                print("Sending message...")
                 websocket.sent(message)
                 flag = 0
             else:
