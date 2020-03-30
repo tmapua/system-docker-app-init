@@ -42,7 +42,7 @@ async def weatherapp(websocket, path):
         try:
             if flag == 1:
                 print("Sending message...")
-                websocket.sent(message)
+                websocket.send(message)
                 flag = 0
             else:
                 condition.wait()
