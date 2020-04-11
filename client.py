@@ -7,8 +7,9 @@ from time import sleep
 import websockets
 
 condition = threading.Condition()
-flag = 0
+flag = 1
 message = None
+query = None
 
 async def get_weather():
     global condition
@@ -18,17 +19,18 @@ async def get_weather():
     async with websockets.connect(uri) as websocket:
         #action here
         while(True):
+            condition.acquire()
             try:
                 if flag == 0:
-                    async for query in websocket:
-                        await websocket.send(query)
-                        message = await websocket.recv()
-                        print(message)
-                        flag = 1
-                        print("flag: {}".format(flag))
+                    await websocket.send(query)
+                    message = await websocket.recv()
+                    print(message)
+                    flag = 1
+                    print("flag: {}".format(flag))
                 else:
                     condition.wait()
                 condition.release()
+                condition.notifyAll()
             except:
                 print("Error in connecting to Docker; please check the container's log files.")
 
@@ -39,19 +41,24 @@ async def weatherapp():
     global message
 
     while(True):
+        condition.acquire()
         try:
             print("Attempting to connect to cloud...")
             async with websockets.connect("ws://rpkl2.kasilag.me:8080/weather") as websocket:
+                print("Connected to S1!")
                 while(True):
                     try:
-                        if flag == 1 and message:
-                            print("Sending message...")
-                            await websocket.send(message)
-                            message = None
+                        if flag == 1:
+                            query = await websocket.recv()
                             flag = 0
+                            # print("Sending message...")
+                            # await websocket.send(message)
+                            # message = None
+                            # flag = 0
                         else:
                             condition.wait()
                         condition.release()
+                        condition.notifyAll()
                     except websockets.ConnectionClosed:
                         pass
         except:
