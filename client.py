@@ -33,25 +33,26 @@ async def get_weather():
                 print("Error in connecting to Docker; please check the container's log files.")
 
 
-async def weatherapp(websocket, path):
+async def weatherapp():
     global condition
     global flag
     global message
 
-    while(True):
-        try:
-            if flag == 1:
-                print("Sending message...")
-                websocket.send(message)
-                flag = 0
-            else:
-                condition.wait()
-            condition.release()
-        except websockets.ConnectionClosed:
-            pass
-        finally:
-            print("connection removed")
-            break
+    async with websockets.connect("ws://rpkl2.kasilag.me:8080/weather") as websocket:
+        while(True):
+            try:
+                if flag == 1:
+                    print("Sending message...")
+                    websocket.send(message)
+                    flag = 0
+                else:
+                    condition.wait()
+                condition.release()
+            except websockets.ConnectionClosed:
+                pass
+            finally:
+                print("connection removed")
+                break
 
 def weather():
     weather_loop = asyncio.new_event_loop()
@@ -60,11 +61,9 @@ def weather():
     weather_loop.run_forever()
 
 def send_to_s1():
-    producer_loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(producer_loop)    
-    start_server = websockets.serve(weatherapp, socket.gethostbyname(socket.gethostname()), 8080)
-    producer_loop.run_until_complete(start_server)
-    producer_loop.run_forever()
+    client_loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(client_loop)
+    client_loop.run_until_complete(weatherapp())
 
 def docker_cp():
     while True:
