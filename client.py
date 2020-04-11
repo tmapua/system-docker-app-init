@@ -44,9 +44,10 @@ async def weatherapp():
             async with websockets.connect("ws://rpkl2.kasilag.me:8080/weather") as websocket:
                 while(True):
                     try:
-                        if flag == 1:
+                        if flag == 1 and message:
                             print("Sending message...")
                             await websocket.send(message)
+                            message = None
                             flag = 0
                         else:
                             condition.wait()
@@ -66,6 +67,7 @@ def send_to_s1():
     client_loop = asyncio.new_event_loop()
     asyncio.set_event_loop(client_loop)
     client_loop.run_until_complete(weatherapp())
+    client_loop.run_forever()
 
 def docker_cp():
     while True:
