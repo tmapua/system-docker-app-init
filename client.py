@@ -17,7 +17,7 @@ async def get_weather():
     uri = "ws://172.17.0.2:8080" #change to IP address of the server
     async with websockets.connect(uri) as websocket:
         #action here
-        while True:
+        while(True):
             try:
                 if flag == 0:
                     async for query in websocket:
@@ -38,21 +38,23 @@ async def weatherapp():
     global flag
     global message
 
-    async with websockets.connect("ws://rpkl2.kasilag.me:8080/weather") as websocket:
-        while(True):
-            try:
-                if flag == 1:
-                    print("Sending message...")
-                    websocket.send(message)
-                    flag = 0
-                else:
-                    condition.wait()
-                condition.release()
-            except websockets.ConnectionClosed:
-                pass
-            finally:
-                print("connection removed")
-                break
+    while(True):
+        try:
+            print("Attempting to connect to cloud...")
+            async with websockets.connect("ws://rpkl2.kasilag.me:8080/weather") as websocket:
+                while(True):
+                    try:
+                        if flag == 1:
+                            print("Sending message...")
+                            await websocket.send(message)
+                            flag = 0
+                        else:
+                            condition.wait()
+                        condition.release()
+                    except websockets.ConnectionClosed:
+                        pass
+        except:
+            pass
 
 def weather():
     weather_loop = asyncio.new_event_loop()
