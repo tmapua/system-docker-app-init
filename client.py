@@ -18,12 +18,14 @@ async def get_weather():
     uri = "ws://172.17.0.2:8082" #change to IP address of the server
     while(True):
         async with websockets.connect(uri) as websocket:
+            print("Connected to Docker!")
             #action here
             while(True):
                 condition.acquire()
                 try:
                     if flag == 0:
                         await websocket.send(query)
+                        print("Query sent!")
                         query = None
                         message = await websocket.recv()
                         print(message)
