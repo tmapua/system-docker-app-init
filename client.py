@@ -15,24 +15,27 @@ async def get_weather():
     global condition
     global flag
     global message
-    uri = "ws://172.17.0.2:8080" #change to IP address of the server
-    async with websockets.connect(uri) as websocket:
-        #action here
-        while(True):
-            condition.acquire()
-            try:
-                if flag == 0:
-                    await websocket.send(query)
-                    message = await websocket.recv()
-                    print(message)
-                    flag = 1
-                    print("flag: {}".format(flag))
-                else:
-                    condition.wait()
-                condition.release()
-                condition.notifyAll()
-            except:
-                print("Error in connecting to Docker; please check the container's log files.")
+    uri = "ws://172.17.0.2:8082" #change to IP address of the server
+    while(True):
+        async with websockets.connect(uri) as websocket:
+            #action here
+            while(True):
+                condition.acquire()
+                try:
+                    if flag == 0:
+                        await websocket.send(query)
+                        query = None
+                        message = await websocket.recv()
+                        print(message)
+                        flag = 1
+                        print("flag: {}".format(flag))
+                    else:
+                        condition.wait()
+                    condition.release()
+                    condition.notifyAll()
+                except:
+                    print("Error in connecting to Docker; please check the container's log files.")
+                    break
 
 
 async def weatherapp():
@@ -41,14 +44,17 @@ async def weatherapp():
     global message
 
     while(True):
-        condition.acquire()
         try:
             print("Attempting to connect to cloud...")
             async with websockets.connect("ws://rpkl2.kasilag.me:8080/weather") as websocket:
                 print("Connected to S1!")
                 while(True):
+                    condition.acquire()
                     try:
                         if flag == 1:
+                            if message:
+                                await websocket.send(message)
+                                message = None
                             query = await websocket.recv()
                             flag = 0
                             # print("Sending message...")

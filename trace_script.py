@@ -27,7 +27,7 @@ def dump_print(filename):
 def weather():
     producer_loop = asyncio.new_event_loop()
     asyncio.set_event_loop(producer_loop)
-    start_server = websockets.serve(echo, "172.17.0.2", 8080)    
+    start_server = websockets.serve(echo, "172.17.0.2", 8082)    
     producer_loop.run_until_complete(start_server)
     producer_loop.run_forever()
 

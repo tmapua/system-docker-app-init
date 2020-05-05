@@ -1,4 +1,8 @@
 docker image build -t server_app:1.0 .
-docker container run --privileged --publish 8000:8080 --detach --name server_app server_app:1.0
+docker container run --privileged --publish 8000:8082 --detach --name server_app server_app:1.0
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' server_app
 docker logs server_app
 docker container rm --force server_app
+
+
+ssh -i stt-asr ubuntu@rpkl2.kasilag.me
