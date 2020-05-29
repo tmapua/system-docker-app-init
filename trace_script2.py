@@ -54,8 +54,8 @@ if os.path.exists(filename):
     os.remove(filename)
 
 
-client = threading.Thread(target=tcp_dump, args=(filename,))
-cpu_monitor = threading.Thread(target=dump_print, args=(filename,))#, daemon=True)
+# client = threading.Thread(target=tcp_dump, args=(filename,))
+# cpu_monitor = threading.Thread(target=dump_print, args=(filename,))#, daemon=True)
 weather_app = threading.Thread(target=run_client, args=())
 client.start()
 cpu_monitor.start()
