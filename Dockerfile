@@ -3,7 +3,7 @@ RUN apt-get update && apt-get install -y tcpdump tcptrace && apt-get install -y 
 
 WORKDIR /app
 
-EXPOSE 8082
+EXPOSE 8080
 
 ADD trace_script2.py /app/
 ADD pyowm_app.py /app/
