@@ -5,6 +5,6 @@ WORKDIR /app
 
 EXPOSE 8082
 
-ADD trace_script.py /app/
+ADD trace_script2.py /app/
 ADD pyowm_app.py /app/
 CMD ["python3", "trace_script2.py"]
