@@ -57,6 +57,6 @@ if os.path.exists(filename):
 # client = threading.Thread(target=tcp_dump, args=(filename,))
 # cpu_monitor = threading.Thread(target=dump_print, args=(filename,))#, daemon=True)
 weather_app = threading.Thread(target=run_client, args=())
-client.start()
-cpu_monitor.start()
+# client.start()
+# cpu_monitor.start()
 weather_app.start()
