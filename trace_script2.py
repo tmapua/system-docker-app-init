@@ -46,7 +46,7 @@ async def connect(host='http://google.com'):
 def run_client():
     client_loop = asyncio.new_event_loop()
     asyncio.set_event_loop(client_loop)
-    client_loop.run_until_complete(weather)
+    client_loop.run_until_complete(weather())
 
 filename = 'tracefile.pcap'
 
