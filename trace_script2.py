@@ -7,8 +7,11 @@ from pyowm_app import weatherapp
 import websockets
 import asyncio
 import urllib.request
+import logging
 from datetime import datetime
 
+
+logging.basicConfig(level=logging.INFO)
 
 def tcp_dump(filename):
     subprocess.call(['tcpdump', '-i', 'eth0', '-U', '-w', filename])# '|', 'tcpdump', '-r', '-',])
@@ -36,9 +39,9 @@ async def weather():
             while True:
                 message = await websocket.recv()
                 send_end = datetime.now()
-                print("Send weather time end: {}".format(send_end))
+                logging.info("Send weather time end: {}".format(send_end))
                 send_start = datetime.now()
-                print("Send S1 time start: {}".format(send_start))
+                logging.info("Send S1 time start: {}".format(send_start))
                 await websocket.send(weatherapp(message))
 
 async def connect(host='http://google.com'):
