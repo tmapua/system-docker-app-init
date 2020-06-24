@@ -1,5 +1,5 @@
 FROM ubuntu
-RUN apt-get update && apt-get install -y tcpdump tcptrace && apt-get install -y python3 && apt-get install -y net-tools && apt-get install -y python3-pip && pip3 install pyowm requests websockets asyncio
+RUN apt-get update && apt-get install -y tcpdump tcptrace && apt-get install -y python3 && apt-get install -y net-tools && apt-get install -y python3-pip && pip3 install pyowm requests websockets asyncio && DEBIAN_FRONTEND=noninteractive apt-get install -y tshark
 
 WORKDIR /app
 
