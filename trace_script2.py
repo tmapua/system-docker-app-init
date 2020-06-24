@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO)
 def tcp_dump(filename):
     subprocess.call(['touch', filename])
     subprocess.call(['chmod', 'o=rw', filename])
-    subprocess.call(['tshark', '-i', 'eth0', '-U', '-w', filename, '-F', 'pcap', '-q'])# '|', 'tcpdump', '-r', '-',])
+    subprocess.call(['tshark', '-i', 'eth0', '-w', filename, '-F', 'pcap', '-q'])# '|', 'tcpdump', '-r', '-',])
 
 
 def dump_print(filename):
