@@ -14,7 +14,7 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO)
 
 def tcp_dump(filename):
-    subprocess.call(['tcpdump', '-i', 'eth0', '-U', '-w', filename])# '|', 'tcpdump', '-r', '-',])
+    subprocess.call(['tshark', '-i', 'eth0', '-U', '-w', filename])# '|', 'tcpdump', '-r', '-',])
 
 
 def dump_print(filename):
@@ -34,7 +34,7 @@ async def weather():
     #     await websocket.send(message)
     #     print(message)
     while True:
-        ip_address = "54.255.179.114"
+        ip_address = "18.191.79.81"
         async with websockets.connect("ws://{}:8080/weather".format(ip_address)) as websocket:
             while True:
                 message = await websocket.recv()
@@ -62,9 +62,9 @@ if os.path.exists(filename):
     os.remove(filename)
 
 
-# client = threading.Thread(target=tcp_dump, args=(filename,))
+client = threading.Thread(target=tcp_dump, args=(filename,))
 # cpu_monitor = threading.Thread(target=dump_print, args=(filename,))#, daemon=True)
 weather_app = threading.Thread(target=run_client, args=())
-# client.start()
+client.start()
 # cpu_monitor.start()
 weather_app.start()
