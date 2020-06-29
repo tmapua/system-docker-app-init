@@ -36,7 +36,7 @@ async def weather():
     #     await websocket.send(message)
     #     print(message)
     while True:
-        ip_address = "175.41.163.27"
+        ip_address = "3.17.151.80"
         async with websockets.connect("ws://{}:8080/weather".format(ip_address)) as websocket:
             while True:
                 message = await websocket.recv()
